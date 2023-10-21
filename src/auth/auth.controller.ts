@@ -1,0 +1,49 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Res,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { Response, Request } from 'express';
+import { AuthService } from './auth.service';
+import { FindUserForSigninDto } from 'src/users/dto/find-user-for-signin.dto';
+import { AuthGuard } from '@nestjs/passport';
+
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly AuthService: AuthService) {}
+
+  @Post('/local/signup')
+  async signUpLocal(
+    @Res() res: Response,
+    @Body() createUserDto: CreateUserDto,
+  ) {
+    console.log('endpoint /local/signup');
+    const newUser = await this.AuthService.signUpLocal(createUserDto);
+    return res.send(newUser);
+  }
+
+  @Post('/login')
+  async signInLocal(
+    @Res() res: Response,
+    @Body() findUserForSigninDto: FindUserForSigninDto,
+  ) {
+    const newUser = await this.AuthService.signInLocal(findUserForSigninDto);
+    return res.send(newUser);
+  }
+
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Post('/refresh')
+  async refreshToken(@Res() res: Response, @Req() req: Request) {
+    console.log('req.user', req.user);
+    const newUser = await this.AuthService.refreshToken(
+      req.user['user'],
+      req.user['email'],
+    );
+    return res.send(newUser);
+  }
+}
