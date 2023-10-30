@@ -10,7 +10,7 @@ import { ChatGroupsService } from './chat-groups.service';
 import { CreateChatGroupDto } from './dto/create-chat-group.dto';
 import { UpdateChatGroupDto } from './dto/update-chat-group.dto';
 import { Server, Socket } from 'socket.io';
-import { decode, verify } from 'jsonwebtoken';
+import { JwtPayload, decode, verify } from 'jsonwebtoken';
 import { UsersService } from 'src/users/users.service';
 import { JoinToChatGroupDto } from './dto/join-to-chat-group.dto';
 
@@ -64,7 +64,7 @@ export class ChatGroupsGateway implements OnGatewayConnection {
     const { sub: userId } = this.getCurrentUser(client);
 
     const user = await this.usersService.findOneById(+userId);
-    user.joinedChatGroups.forEach((obj) => {
+    user?.joinedChatGroups.forEach((obj) => {
       client.join(obj.title);
     });
   }

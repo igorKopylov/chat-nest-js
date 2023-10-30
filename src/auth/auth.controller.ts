@@ -36,6 +36,22 @@ export class AuthController {
     return res.send(newUser);
   }
 
+  @UseGuards(AuthGuard('google-strategy'))
+  @Get('google')
+  async googleLogin(@Res() res: Response) {
+    return res.send({ msg: 'auth/google OK' });
+  }
+
+  @UseGuards(AuthGuard('google-strategy'))
+  @Get('google/redirect')
+  async googleRedirect(@Res() res: Response, @Req() req: Request) {
+    res.cookie('accessToken', req.user['accessToken'], {
+      expires: new Date(new Date().getTime() + 15 * 6000),
+    });
+    console.log('req.user', req.user['accessToken']);
+    res.redirect('http://localhost:3000/login-ways');
+  }
+
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('/refresh')
   async refreshToken(@Res() res: Response, @Req() req: Request) {

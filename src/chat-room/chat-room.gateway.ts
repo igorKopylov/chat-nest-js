@@ -40,7 +40,7 @@ export class ChatRoomGateway {
   private async connectToChatRooms(client: Socket) {
     const user = await this.getCurrentUser(client);
 
-    user.chatRooms.forEach((obj) => {
+    user?.chatRooms.forEach((obj) => {
       client.join(obj.id);
     });
   }

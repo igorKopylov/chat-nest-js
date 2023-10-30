@@ -8,8 +8,8 @@ import {
 } from 'typeorm';
 import { GenderEnum } from '../types';
 import { ChatGroup } from 'src/chat-groups/entities/chat-group.entity';
-import { Exclude } from 'class-transformer';
 import { ChatRoom } from 'src/chat-room/entities/chat-room.entity';
+import { Optional } from '@nestjs/common';
 
 @Entity()
 export class User extends BaseEntity {
@@ -19,11 +19,11 @@ export class User extends BaseEntity {
   @Column()
   email: string;
 
-  @Column()
-  @Exclude()
+  @Column({ nullable: true })
+  @Optional()
   password: string;
 
-  @Column()
+  @Column({ nullable: true })
   gender: GenderEnum;
 
   @OneToMany(() => ChatRoom, (chatRoom) => chatRoom.creator)

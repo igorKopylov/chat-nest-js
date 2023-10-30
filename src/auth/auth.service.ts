@@ -69,7 +69,8 @@ export class AuthService {
       throw new BadRequestException('Email or password is incorrect');
     }
 
-    const isPasswordMatching = compare(password, user.password);
+    const isPasswordMatching = await compare(password, user.password);
+    console.log(isPasswordMatching);
     if (!isPasswordMatching) {
       throw new BadRequestException('Email or password is incorrect');
     }
@@ -91,5 +92,23 @@ export class AuthService {
     );
 
     return { accessToken };
+  }
+
+  async googleAuth(email: string, name: string) {
+    //google login
+    const user = await this.UsersService.findOneByEmail(email);
+
+    if (user) {
+      const tokens1 = await this.getTokens(user.id, user.email);
+      return { ...user, ...tokens1 };
+    }
+
+    //google sign up
+    console.log('user not found, creating new user...');
+
+    const savedUser = await this.UsersService.createByGoogle(email, name);
+
+    const tokens2 = await this.getTokens(savedUser.id, savedUser.email);
+    return { ...savedUser, ...tokens2 };
   }
 }

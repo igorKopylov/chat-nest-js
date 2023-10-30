@@ -62,8 +62,19 @@ export class UsersService {
   }
 
   async findOneForSignIn(email: string) {
-    const user = await this.UsersRepository.findOne({ where: { email } });
+    const user = await this.UsersRepository.findOne({
+      where: { email },
+    });
     return user;
+  }
+
+  async createByGoogle(email: string, name: string) {
+    const newUser = await this.UsersRepository.save({
+      email,
+      name,
+      gneder: 'male',
+    });
+    return newUser;
   }
 
   // updateUserToken(userId: number, accessToken: any) {

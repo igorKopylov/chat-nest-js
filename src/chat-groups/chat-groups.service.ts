@@ -19,7 +19,10 @@ export class ChatGroupsService {
       ...createChatGroupDto,
     });
 
-    user.joinedChatGroups = [newChatGroup, ...user.joinedChatGroups];
+    if (user.joinedChatGroups) {
+      user.joinedChatGroups = [newChatGroup, ...user.joinedChatGroups];
+    }
+
     user.save();
 
     return newChatGroup;
