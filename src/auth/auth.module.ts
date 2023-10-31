@@ -8,10 +8,10 @@ import {
   RefreshTokenStrategy,
 } from './strategies';
 import { UsersModule } from 'src/users/users.module';
-import { MailerModule } from '@nestjs-modules/mailer';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UsersModule, JwtModule.register({})],
+  imports: [UsersModule, JwtModule.register({}), ConfigModule.forRoot()],
   controllers: [AuthController],
   providers: [
     GoogleStrategy,
