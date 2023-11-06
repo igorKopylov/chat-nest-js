@@ -26,6 +26,9 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   gender: GenderEnum;
 
+  @Column('simple-array')
+  photos: string[];
+
   @OneToMany(() => ChatRoom, (chatRoom) => chatRoom.creator)
   chatRooms: ChatRoom[];
 

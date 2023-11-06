@@ -15,7 +15,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly AuthService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('/local/signup')
   async signUpLocal(
@@ -23,7 +23,7 @@ export class AuthController {
     @Body() createUserDto: CreateUserDto,
   ) {
     console.log('endpoint /local/signup');
-    const newUser = await this.AuthService.signUpLocal(createUserDto);
+    const newUser = await this.authService.signUpLocal(createUserDto);
     return res.send(newUser);
   }
 
@@ -32,7 +32,7 @@ export class AuthController {
     @Res() res: Response,
     @Body() findUserForSigninDto: FindUserForSigninDto,
   ) {
-    const newUser = await this.AuthService.signInLocal(findUserForSigninDto);
+    const newUser = await this.authService.signInLocal(findUserForSigninDto);
     return res.send(newUser);
   }
 
@@ -40,6 +40,12 @@ export class AuthController {
   @Get('google')
   async googleLogin(@Res() res: Response) {
     return res.send({ msg: 'auth/google OK' });
+  }
+
+  @Post('/email/sendLink')
+  async sendEmailLink(@Res() res: Response) {
+    const emailLink = await this.authService.sendEmailLink();
+    return res.send({ emailLink });
   }
 
   @UseGuards(AuthGuard('google-strategy'))
@@ -56,7 +62,7 @@ export class AuthController {
   @Post('/refresh')
   async refreshToken(@Res() res: Response, @Req() req: Request) {
     console.log('req.user', req.user);
-    const newUser = await this.AuthService.refreshToken(
+    const newUser = await this.authService.refreshToken(
       req.user['user'],
       req.user['email'],
     );

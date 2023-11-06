@@ -9,6 +9,7 @@ import {
 } from './strategies';
 import { UsersModule } from 'src/users/users.module';
 import { ConfigModule } from '@nestjs/config';
+import { FirebaseAdminService } from 'firebase.config';
 
 @Module({
   imports: [UsersModule, JwtModule.register({}), ConfigModule.forRoot()],
@@ -17,6 +18,7 @@ import { ConfigModule } from '@nestjs/config';
     GoogleStrategy,
     AccessTokenStrategy,
     RefreshTokenStrategy,
+    FirebaseAdminService,
     {
       provide: 'AUTH_SERVICE',
       useClass: AuthService,

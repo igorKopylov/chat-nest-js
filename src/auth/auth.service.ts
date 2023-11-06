@@ -8,12 +8,14 @@ import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from './../users/dto/create-user.dto';
 import { FindUserForSigninDto } from 'src/users/dto/find-user-for-signin.dto';
 import { compare } from 'bcrypt';
+import { FirebaseAdminService } from 'firebase.config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly UsersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly firebaseAdminService: FirebaseAdminService,
   ) {}
 
   private async getTokens(userId: number, email: string) {
@@ -92,6 +94,21 @@ export class AuthService {
     );
 
     return { accessToken };
+  }
+
+  async sendEmailLink() {
+    const firebaseAuth = this.firebaseAdminService.getAdmin().auth();
+    console.log('firebase auth', firebaseAuth);
+    const emailLink = await firebaseAuth.generateEmailVerificationLink(
+      'igor.kopylov.08d@inbox.ru',
+      {
+        url: 'https://jsonplaceholder.typicode.com/',
+        handleCodeInApp: true,
+      },
+    );
+
+    console.log('email emailLink', emailLink);
+    return emailLink;
   }
 
   async googleAuth(email: string, name: string) {

@@ -16,6 +16,7 @@ export class UsersService {
 
     const newUser = this.UsersRepository.create({
       ...createUserDto,
+      photos: [],
       password: hashedPass,
     });
     // const tokens = await getTokens(newUser.id, newUser.email);
